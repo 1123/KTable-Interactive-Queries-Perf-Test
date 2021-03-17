@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>ktable-perf-interactive-queries</artifactId>
+	<artifactId>interactive-queries-producer-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>interactive-queries-producer-app</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<kafka.version>2.7.0</kafka.version>
