@@ -3,6 +3,9 @@ spring:
     streams:
       application-id: ktable-test
       properties:
+        num:
+          stream:
+            threads: 12
         acks: all
         security:
           protocol: PLAINTEXT

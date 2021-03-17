@@ -13,6 +13,6 @@ echo "Starting up Confluent Kafka"
 confluent local services kafka start
 
 echo "Creating input topic"
-kafka-topics --bootstrap-server localhost:9092 --create --topic processed-messages
+kafka-topics --bootstrap-server localhost:9092 --create --topic processed-messages --partitions=12
 
 
