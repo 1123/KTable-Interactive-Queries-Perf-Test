@@ -1,17 +1,16 @@
 package com.example.producer;
 
-import com.example.interactivequeries.InteractiveQueriesApplication;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @Component
 @Slf4j
@@ -21,10 +20,10 @@ public class SampleDataProducer implements CommandLineRunner {
     private KafkaTemplate<String, Integer> kafkaTemplate;
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws ExecutionException, InterruptedException {
         for (int i = 1; i <= 100000; i++) {
             ProducerRecord<String, Integer> producerRecord = new ProducerRecord<>(
-                    InteractiveQueriesApplication.PROCESSED_MESSAGES_TOPIC,
+                    "processed-messages",
                     UUID.randomUUID().toString(),
                     1
             );

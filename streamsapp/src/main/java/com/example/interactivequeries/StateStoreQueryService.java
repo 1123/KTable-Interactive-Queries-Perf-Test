@@ -16,10 +16,9 @@ public class StateStoreQueryService {
     @Autowired
     private StreamsBuilderFactoryBean streamsBuilderFactoryBean;
 
-
     @GetMapping("/store/{id}")
-    public String getSomeKey(@PathVariable String id) {
-        ReadOnlyKeyValueStore<String, String> store =
+    public Integer getSomeKey(@PathVariable String id) {
+        ReadOnlyKeyValueStore<String, Integer> store =
                 streamsBuilderFactoryBean.getKafkaStreams().store("processed-messages-store", QueryableStoreTypes.keyValueStore());
         return store.get(id);
     }

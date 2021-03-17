@@ -24,10 +24,10 @@ public class InteractiveQueriesApplication {
 	}
 
 	@Bean
-	public KTable<String, String> kTable(StreamsBuilder kStreamBuilder) {
+	public KTable<String, Integer> kTable(StreamsBuilder kStreamBuilder) {
 		return kStreamBuilder.table(
 				PROCESSED_MESSAGES_TOPIC,
-				Consumed.with(new Serdes.StringSerde(), new Serdes.StringSerde()),
+				Consumed.with(new Serdes.StringSerde(), new Serdes.IntegerSerde()),
 				Materialized.as(PROCESSED_MESSAGES_STORE_NAME)
 		);
 	}
