@@ -5,9 +5,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -21,14 +19,14 @@ public class SampleDataProducer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws ExecutionException, InterruptedException {
-        for (int i = 1; i <= 100000; i++) {
+        for (int i = 1; i <= 10000000; i++) {
             ProducerRecord<String, Integer> producerRecord = new ProducerRecord<>(
                     "processed-messages",
                     UUID.randomUUID().toString(),
                     1
             );
             kafkaTemplate.send(producerRecord);
-            if (i % 10000 == 0) {
+            if (i % 1000000 == 0) {
                 log.info("Produced {} messages.", i);
                 log.info("last message key: {}", producerRecord.key());
             }
