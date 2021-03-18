@@ -19,7 +19,7 @@ public class SampleDataProducer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws ExecutionException, InterruptedException {
-        for (int i = 1; i <= 10000000; i++) {
+        for (int i = 1; i <= 100000000; i++) {
             ProducerRecord<String, Integer> producerRecord = new ProducerRecord<>(
                     "processed-messages",
                     UUID.randomUUID().toString(),
