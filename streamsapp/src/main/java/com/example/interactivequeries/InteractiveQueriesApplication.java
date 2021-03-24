@@ -27,6 +27,12 @@ public class InteractiveQueriesApplication {
 		properties.put("application.id", "ktable-test");
 		properties.put("bootstrap.servers", "localhost:9092");
 		properties.put("num.stream.threads", "4");
+		properties.put("num.standby.replicas", 1);
+		properties.put("state.dir", String.format("/tmp/kafka-streams/%s-%s", System.getenv("APP_HOST"), System.getenv("APP_PORT")));
+		// The following property is by default set to 10 minutes.
+		// This leads to remote querying of state being impossible in the first 10 minutes after startup.
+		// Not sure why the default value is chosen so large.
+		properties.put("probing.rebalance.interval.ms", 60000);
 		properties.put("application.server", String.format("%s:%s", System.getenv("APP_HOST"), System.getenv("APP_PORT")));
 		StreamsBuilder streamsBuilder = new StreamsBuilder();
 		var table = streamsBuilder.table(

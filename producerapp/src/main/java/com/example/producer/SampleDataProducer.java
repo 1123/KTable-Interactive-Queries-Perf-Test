@@ -19,14 +19,14 @@ public class SampleDataProducer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws ExecutionException, InterruptedException {
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 5000000; i++) {
             ProducerRecord<String, Integer> producerRecord = new ProducerRecord<>(
                     "processed-messages",
                     UUID.randomUUID().toString(),
                     1
             );
             kafkaTemplate.send(producerRecord);
-            if (i % 100 == 0) {
+            if (i % 200000 == 0) {
                 log.info("Produced {} messages.", i);
                 log.info("last message key: {}", producerRecord.key());
             }
