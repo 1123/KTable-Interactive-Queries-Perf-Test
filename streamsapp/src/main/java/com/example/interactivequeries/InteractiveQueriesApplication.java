@@ -24,9 +24,10 @@ public class InteractiveQueriesApplication {
 	@Bean
 	public KafkaStreams stream() {
 		Properties properties = new Properties();
-		properties.put("application.id", "foo-application-3");
+		properties.put("application.id", "ktable-test");
 		properties.put("bootstrap.servers", "localhost:9092");
-		properties.put("num.stream.threads", "12");
+		properties.put("num.stream.threads", "4");
+		properties.put("application.server", String.format("%s:%s", System.getenv("APP_HOST"), System.getenv("APP_PORT")));
 		StreamsBuilder streamsBuilder = new StreamsBuilder();
 		var table = streamsBuilder.table(
 				PROCESSED_MESSAGES_TOPIC,
