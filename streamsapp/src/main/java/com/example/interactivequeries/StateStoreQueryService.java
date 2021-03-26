@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @Slf4j
 public class StateStoreQueryService {
@@ -23,8 +26,8 @@ public class StateStoreQueryService {
     private KafkaStreams kafkaStreams;
 
     @GetMapping("/store/{id}")
-    public Integer getSomeKey(@PathVariable String id) {
-        ReadOnlyKeyValueStore<String, Integer> store =
+    public String getSomeKey(@PathVariable String id) {
+        ReadOnlyKeyValueStore<String, String> store =
             kafkaStreams.store(STORE_NAME, QueryableStoreTypes.keyValueStore());
         var localResult = store.get(id);
         if (localResult != null) return localResult;
@@ -37,7 +40,7 @@ public class StateStoreQueryService {
                         streamsMetaData.activeHost().host(),
                         streamsMetaData.activeHost().port(),
                         id
-                ), Integer.class
+                ), String.class
         ).getBody();
     }
 

@@ -37,7 +37,7 @@ public class InteractiveQueriesApplication {
 		StreamsBuilder streamsBuilder = new StreamsBuilder();
 		var table = streamsBuilder.table(
 				PROCESSED_MESSAGES_TOPIC,
-				Consumed.with(new Serdes.StringSerde(), new Serdes.IntegerSerde()),
+				Consumed.with(new Serdes.StringSerde(), new Serdes.StringSerde()),
 				Materialized.as(PROCESSED_MESSAGES_STORE_NAME)
 		);
 		var topology = streamsBuilder.build();
