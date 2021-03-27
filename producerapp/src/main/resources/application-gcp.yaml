@@ -1,0 +1,21 @@
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: vm1:9091,vm2:9091,vm3:9091
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        ssl:
+          truststore:
+            location: /home/benedikt/post/post-ansible/utility/truststore.jks
+            password: confluenttruststorepass
+        security:
+          protocol: SASL_SSL
+        bootstrap:
+          servers: vm1:9091,vm2:9091,vm3:9091
+        sasl:
+          jaas:
+            config: org.apache.kafka.common.security.scram.ScramLoginModule required username='admin' password='admin-secret';
+          mechanism: SCRAM-SHA-512
+
