@@ -9,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @SpringBootApplication
@@ -22,26 +24,25 @@ public class InteractiveQueriesApplication {
 	}
 
 	@Bean
-	public KafkaStreams stream() {
-		Properties properties = new Properties();
-		properties.put("application.id", "ktable-test");
-		properties.put("bootstrap.servers", "localhost:9092");
-		properties.put("num.stream.threads", "4");
-		properties.put("num.standby.replicas", 1);
-		properties.put("state.dir", String.format("/tmp/kafka-streams/%s-%s", System.getenv("APP_HOST"), System.getenv("APP_PORT")));
-		// The following property is by default set to 10 minutes.
-		// This leads to remote querying of state being impossible in the first 10 minutes after startup.
-		// Not sure why the default value is chosen so large.
-		properties.put("probing.rebalance.interval.ms", 60000);
-		properties.put("application.server", String.format("%s:%s", System.getenv("APP_HOST"), System.getenv("APP_PORT")));
+	public Properties kafkaStreamsProperties() throws IOException {
+		Properties prop = new Properties();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		InputStream stream = loader.getResourceAsStream(
+				String.format("kafkastreams-%s.properties", System.getenv("SPRING_PROFILES_ACTIVE")));
+		prop.load(stream);
+		return prop;
+	}
+
+	@Bean
+	public KafkaStreams stream(Properties kafkaStreamsProperties) {
 		StreamsBuilder streamsBuilder = new StreamsBuilder();
-		var table = streamsBuilder.table(
+		streamsBuilder.table(
 				PROCESSED_MESSAGES_TOPIC,
 				Consumed.with(new Serdes.StringSerde(), new Serdes.StringSerde()),
 				Materialized.as(PROCESSED_MESSAGES_STORE_NAME)
 		);
 		var topology = streamsBuilder.build();
-		KafkaStreams kafkaStreams = new KafkaStreams(topology, properties);
+		KafkaStreams kafkaStreams = new KafkaStreams(topology, kafkaStreamsProperties);
 		kafkaStreams.start();
 		return kafkaStreams;
 	}

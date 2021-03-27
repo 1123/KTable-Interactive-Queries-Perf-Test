@@ -2,7 +2,5 @@
 
 set -e -u
 
-export APP_HOST=localhost
-export APP_PORT=7001
-
+export SPRING_PROFILES_ACTIVE=local1
 mvn spring-boot:run 
