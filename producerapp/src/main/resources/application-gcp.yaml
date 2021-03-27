@@ -5,6 +5,12 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
+        batch:
+          size: 200000
+        compression: 
+          type: lz4
+        linger:
+          ms: 1000
         acks: all
         ssl:
           truststore:
