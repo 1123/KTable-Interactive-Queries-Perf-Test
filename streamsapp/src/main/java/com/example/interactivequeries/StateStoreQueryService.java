@@ -27,10 +27,15 @@ public class StateStoreQueryService {
 
     @GetMapping("/store/{id}")
     public String getSomeKey(@PathVariable String id) {
+        log.info("Searching for value in local store");
         ReadOnlyKeyValueStore<String, String> store =
             kafkaStreams.store(STORE_NAME, QueryableStoreTypes.keyValueStore());
+        log.info("Approximate number of entries: {}", store.approximateNumEntries());
         var localResult = store.get(id);
-        if (localResult != null) return localResult;
+        if (localResult != null) {
+            log.info("Found result in local store: {}", localResult);
+            return localResult;
+        }
         log.info(kafkaStreams.allMetadata().toString());
         KeyQueryMetadata streamsMetaData = kafkaStreams.queryMetadataForKey(STORE_NAME, id, Serdes.String().serializer());
         RestTemplate restTemplate = new RestTemplate();
