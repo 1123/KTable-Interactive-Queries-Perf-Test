@@ -6,15 +6,11 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyQueryMetadata;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
-import org.apache.kafka.streams.state.StreamsMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @Slf4j
@@ -26,7 +22,7 @@ public class StateStoreQueryService {
     private KafkaStreams kafkaStreams;
 
     @GetMapping("/store/{id}")
-    public String getSomeKey(@PathVariable String id) {
+    public String getKey(@PathVariable String id) {
         log.info("Searching for value in local store");
         ReadOnlyKeyValueStore<String, String> store =
             kafkaStreams.store(STORE_NAME, QueryableStoreTypes.keyValueStore());
@@ -41,12 +37,27 @@ public class StateStoreQueryService {
         RestTemplate restTemplate = new RestTemplate();
         log.info("Querying remote instance: {}", streamsMetaData.toString());
         return restTemplate.getForEntity(
-                String.format("http://%s:%s/store/%s",
+                String.format("http://%s:%s/remote/%s",
                         streamsMetaData.activeHost().host(),
                         streamsMetaData.activeHost().port(),
                         id
                 ), String.class
         ).getBody();
     }
+
+    @GetMapping("/remote/{id}")
+    public String getRemoteKey(@PathVariable String id) {
+        log.info("Searching for value in local store");
+        ReadOnlyKeyValueStore<String, String> store =
+                kafkaStreams.store(STORE_NAME, QueryableStoreTypes.keyValueStore());
+        log.info("Approximate number of entries: {}", store.approximateNumEntries());
+        var localResult = store.get(id);
+        if (localResult != null) {
+            log.info("Found result in local store: {}", localResult);
+            return localResult;
+        }
+        throw new RuntimeException(String.format("No entry for key %s found", id));
+    }
+
 
 }
