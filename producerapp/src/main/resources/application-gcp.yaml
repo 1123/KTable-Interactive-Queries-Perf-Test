@@ -14,7 +14,7 @@ spring:
         acks: all
         ssl:
           truststore:
-            location: /home/benedikt/post/post-ansible/utility/truststore.jks
+            location: truststore.jks
             password: confluenttruststorepass
         security:
           protocol: SASL_SSL
