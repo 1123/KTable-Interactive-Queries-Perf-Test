@@ -1,5 +1,7 @@
 package com.example.interactivequeries;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -22,15 +24,15 @@ public class StateStoreQueryService {
     private KafkaStreams kafkaStreams;
 
     @GetMapping("/threadmetadata")
-    public String threadMetadata() {
+    public String threadMetadata() throws JsonProcessingException {
         var localThreadsMetadata = kafkaStreams.localThreadsMetadata();
-        return localThreadsMetadata.toString();
+        return new ObjectMapper().writeValueAsString(new AllThreadsMetaDataPojo(localThreadsMetadata));
     }
 
     @GetMapping("/metadata")
-    public String metaData() {
+    public String metaData() throws JsonProcessingException {
         var streamsMetaData = kafkaStreams.allMetadata();
-        return streamsMetaData.toString();
+        return new ObjectMapper().writeValueAsString(new StreamsMetaDataListPojo(streamsMetaData));
     }
 
     @GetMapping("/store/{id}")
@@ -73,3 +75,4 @@ public class StateStoreQueryService {
 
 
 }
+
