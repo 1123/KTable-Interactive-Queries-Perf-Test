@@ -27,7 +27,7 @@ The demo consists of two components:
 
 * Adjust the configs in `producerapp/src/main/resources/application.yaml` and `streamsapp/src/main/resources/kafkastreams-local{1,2,3}.properties` to point to your Kafka cluster. If you are running Confluent Platform locally with default configuration, no configurations must be changed. 
 
-* Run the producer app: `cd prodcuerapp && mvn spring-boot:run`
+* Run the producer app: `cd prodcuerapp && ./run-producer.sh`
 
 * Run the streams app: 
   * `cd streamsapp`

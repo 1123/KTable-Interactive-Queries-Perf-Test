@@ -21,6 +21,18 @@ public class StateStoreQueryService {
     @Autowired
     private KafkaStreams kafkaStreams;
 
+    @GetMapping("/threadmetadata")
+    public String threadMetadata() {
+        var localThreadsMetadata = kafkaStreams.localThreadsMetadata();
+        return localThreadsMetadata.toString();
+    }
+
+    @GetMapping("/metadata")
+    public String metaData() {
+        var streamsMetaData = kafkaStreams.allMetadata();
+        return streamsMetaData.toString();
+    }
+
     @GetMapping("/store/{id}")
     public String getKey(@PathVariable String id) {
         log.info("Searching for value in local store");
