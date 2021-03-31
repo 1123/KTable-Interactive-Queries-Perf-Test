@@ -21,19 +21,23 @@ The demo consists of two components:
 * maven
 * Java JDK
 
-### Running the demo
+### Running the demo locally
 
-* adjust the configs in `producerapp/src/main/resources/application.yaml` and `streamsapp/src/main/resources/application.yaml` to point to your Kafka cluster. 
+* Cleanup any state from previous runs, restart Confluent Platform, and create the input topic as scripted in `./cleanup.sh`.
+
+* Adjust the configs in `producerapp/src/main/resources/application.yaml` and `streamsapp/src/main/resources/kafkastreams-local{1,2,3}.properties` to point to your Kafka cluster. If you are running Confluent Platform locally with default configuration, no configurations must be changed. 
 
 * Run the producer app: `cd prodcuerapp && mvn spring-boot:run`
 
-* Run the streams app: `cd streamsapp && mvn spring-boot:run`
+* Run the streams app: 
+  * `cd streamsapp`
+  * `./start-instance-1.sh`
+  * `./start-instance-2.sh`
+  * `./start-instance-3.sh`
+  * Inspect the `/tmp/kafka-streams` directory to see the RocksDB state stores being built: `du -sh /tmp/kafka-streams/*`.  
+  * Watch the logs of the streams app to see the state store being populated (offsets being committed). 
 
-* Watch the logs of the streams app to see the state store being populated (offsets being committed). 
-
-* Watch the size of the Rocksdb state store on disk: `du -sh /tmp/kafka-streams/`
-
-* Query the state store through the rest interface: `./query-state-store.sh` 
+* Copy some message keys from the output of the producer app, and use them to query the state store through the rest interface: `./query-state-store.sh "7dc6a760-9d34-4b21-9722-3fc7c56e1858 739b4c8b-9e59-4286-b47f-1466854ae259 c6b41d81-7da3-4f60-82ef-da3e58371f5a" "localhost:7001 localhost:7002 localhost:7003" ` 
 
 
 
